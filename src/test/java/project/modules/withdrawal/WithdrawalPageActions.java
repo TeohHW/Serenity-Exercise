@@ -11,7 +11,7 @@ public class WithdrawalPageActions {
 
     public static Performable navigateToLoginPage() {
         String environment = "environments." + Serenity.environmentVariables().getProperty("environment", "default");
-        return Task.where("{0} navigates to login page",
+        return Task.where("{0} navigates to withdrawal page",
                 Open.url(Serenity.environmentVariables().getProperty(environment + ".webdriver.base.url"))
         );
     }
