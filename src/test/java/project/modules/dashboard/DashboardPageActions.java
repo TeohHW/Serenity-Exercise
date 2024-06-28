@@ -20,4 +20,7 @@ public class DashboardPageActions {
     public static Question<String> getPrimaryBalance() {
         return Text.of(DashboardPageObjects.CURRENT_PRIMARY_BALANCE).asString();
     }
+    public static Question<String> getSavingsBalance() {
+        return Text.of(DashboardPageObjects.CURRENT_SAVINGS_BALANCE).asString();
+    }
 }

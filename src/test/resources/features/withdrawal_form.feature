@@ -1,10 +1,11 @@
 Feature: Withdrawal Form Test
 
   Background:
-    Given User is logged in with username 'testing123' and password 'Password123' and is on the Withdraw page
+    Given User is on the withdraw page
 
   @web @withdraw
   Scenario Outline: Successful User Withdrawal from Primary/Savings Account
+    Given User is logged in with username '<User Name>' and password '<Password>'
     When User input account for withdrawal '<Account Type>'
     And User input the amount for withdrawal '<Amount>'
     And User submit the withdrawal

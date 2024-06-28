@@ -112,17 +112,18 @@ public class StepDefinitions {
     }
 
     //Deposit
-    @Given("{actor} is logged in with username {string} and password {string} and is on the Deposit page")
+    @Given("User is on the deposit page")
+    public void userIsOnTheDepositPage() {
+    }
+    @Given("{actor} is depositing using username {string} and password {string}")
     public void userIsOnTheDepositPage(Actor actor, String username, String password) {
-        actor.attemptsTo(
-                LoginPageActions.navigateToLoginPage(),
-                LoginPageActions.enterUserName(username),
-                LoginPageActions.enterUserPassword(password),
-                LoginPageActions.clickSignIn()
-        );
-        actor.remember("initialBalance", DashboardPageActions.getPrimaryBalance());
-        Object recalledValue = actor.recall("initialBalance");
-        System.out.println("Balance before deposit: " + " "+recalledValue.toString());
+        userIsLoggedIn(actor, username, password);
+        actor.remember("initialPrimaryBalance", DashboardPageActions.getPrimaryBalance());
+        Object initialPrimaryBalance = actor.recall("initialPrimaryBalance");
+        System.out.println("Primary balance before deposit: " + " "+initialPrimaryBalance.toString());
+        actor.remember("initialSavingsBalance", DashboardPageActions.getSavingsBalance());
+        Object initialSavingsBalance = actor.recall("initialSavingsBalance");
+        System.out.println("Savings balance before deposit: " + " "+initialSavingsBalance.toString());
         actor.attemptsTo(
                 DashboardPageActions.clickDeposit()
         );
@@ -150,14 +151,20 @@ public class StepDefinitions {
     public void userShouldDepositSuccessfully(Actor actor) {
         Common.timeout(3000);
         System.out.println("Amount deposited: " + actor.recall("amountDeposited"));
-        actor.remember("postBalance", DashboardPageActions.getPrimaryBalance());
-        Object recallValue = actor.recall("postBalance");
-        System.out.println("Balance AFTER deposit: " + " "+recallValue.toString());
+        actor.remember("postPrimaryBalance", DashboardPageActions.getPrimaryBalance());
+        Object postPrimaryBalance = actor.recall("postPrimaryBalance");
+        System.out.println("Balance AFTER deposit: " + " "+postPrimaryBalance.toString());
+
+        actor.remember("postSavingsBalance", DashboardPageActions.getSavingsBalance());
+        Object postSavingsBalance = actor.recall("postSavingsBalance");
+        System.out.println("Savings balance AFTER deposit: " + " "+postSavingsBalance.toString());
     }
 
     //Withdraw
-
-    @Given("{actor} is logged in with username {string} and password {string} and is on the Withdraw page")
+    @Given("User is on the withdraw page")
+    public void userIsOnTheWithdrawPage() {
+    }
+    @Given("{actor} is withdrawing using username {string} and password {string}")
     public void userIsOnTheWithdrawPage(Actor actor, String username, String password) {
         actor.attemptsTo(
                 LoginPageActions.navigateToLoginPage(),
@@ -200,8 +207,10 @@ public class StepDefinitions {
         actor.remember("postBalance", DashboardPageActions.getPrimaryBalance());
         Object recallValue = actor.recall("postBalance");
         System.out.println("Balance AFTER withdrawal: " + " "+recallValue.toString());
+
+        actor.remember("postSavingsBalance", DashboardPageActions.getSavingsBalance());
+        Object postSavingsBalance = actor.recall("postSavingsBalance");
+        System.out.println("Savings balance AFTER withdrawal: " + " "+postSavingsBalance.toString());
     }
 
-
 }
-
