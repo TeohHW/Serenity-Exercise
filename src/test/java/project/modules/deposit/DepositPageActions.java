@@ -9,21 +9,14 @@ import net.serenitybdd.screenplay.actions.Open;
 import net.serenitybdd.screenplay.actions.SelectFromOptions;
 
 public class DepositPageActions {
-
-    public static Performable navigateToDepositPage() {
-        String environment = "environments." + Serenity.environmentVariables().getProperty("environment", "default");
-        return Task.where("{0} navigates to deposit page",
-                Open.url(Serenity.environmentVariables().getProperty(environment + ".webdriver.base.url"))
-        );
-    }
     public static Performable selectAccount(String state) {
         return Task.where("{0} selects account '" + state + "'",
                 SelectFromOptions.byVisibleText(state).from(DepositPageObjects.ACCOUNT_TYPE)
         );
     }
     public static Performable enterAmount(String amount) {
-        return Task.where("{0} input amount '" + amount + "'",
-                SelectFromOptions.byVisibleText(amount).from(DepositPageObjects.AMOUNT)
+        return Task.where("{0} input amount $'" + amount + "'",
+                Enter.theValue(amount).into(DepositPageObjects.AMOUNT)
         );
     }
     public static Performable clickDeposit() {
@@ -31,4 +24,5 @@ public class DepositPageActions {
                 Click.on(DepositPageObjects.DEPOSIT_BTN)
         );
     }
+
 }

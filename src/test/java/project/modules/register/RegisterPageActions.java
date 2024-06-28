@@ -6,15 +6,10 @@ import net.serenitybdd.screenplay.Task;
 import net.serenitybdd.screenplay.actions.Click;
 import net.serenitybdd.screenplay.actions.Enter;
 import net.serenitybdd.screenplay.actions.Open;
+import net.serenitybdd.screenplay.actors.OnStage;
+import org.openqa.selenium.WebElement;
 
 public class RegisterPageActions {
-
-    public static Performable navigateToRegistrationPage() {
-        String environment = "environments." + Serenity.environmentVariables().getProperty("environment", "default");
-        return Task.where("{0} navigates to registration page",
-                Open.url(Serenity.environmentVariables().getProperty(environment + ".webdriver.base.url"))
-        );
-    }
     public static Performable enterFirstName(String firstName) {
         return Task.where("{0} enters first name '" + firstName + "'",
                 Enter.theValue(firstName).into(RegisterPageObjects.FIRSTNAME_FIELD)
@@ -40,7 +35,8 @@ public class RegisterPageActions {
                 Enter.theValue(username).into(RegisterPageObjects.USERNAME_FIELD)
         );
     }
-    public static Performable enterUserPassword(String password) {
+
+    public static Performable enterPassword(String password) {
         return Task.where("{0} enters password '" + password + "'",
                 Enter.theValue(password).into(RegisterPageObjects.PASSWORD_FIELD)
         );

@@ -1,14 +1,17 @@
 Feature: Withdrawal Form Test
 
   Background:
-    Given User is on the login page
+    Given User is logged in with username 'testing123' and password 'Password123' and is on the Withdraw page
 
-  @web @withdrawal
-  Scenario Outline: Successful User Withdrawal
-    
+  @web @withdraw
+  Scenario Outline: Successful User Withdrawal from Primary/Savings Account
+    When User input account '<Account Type>'
+    And User input the amount '<Amount>'
+    And User submit the withdrawal
+    Then User should withdraw successfully
     Examples:
-      | Username | Password |
-      | user01   | user01   |
+      | Account Type | Amount |
+      | Primary   | 5000   |
 
     # run in terminal (Command Prompt)
     # mvn clean verify -Dcucumber.filter.tags=@withdrawal

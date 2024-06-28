@@ -13,8 +13,8 @@ Feature: Registration Form Test
     And User input  password '<Password>'
     Then User should be registered successfully
     Examples:
-      | First Name| Last Name | Phone | Email Address | Username | Password |
-      | John  |   Doe     | 987654321 | JohnDoe@email.com| JohnDoe | Password123 |
+      | First Name | Last Name | Phone | Email Address | Username | Password |
+      |John|Doe|987654321|JohnDoe@email.com|testing123|Password123|
 
     # run in terminal (Command Prompt)
     # mvn clean verify -Dcucumber.filter.tags=@register

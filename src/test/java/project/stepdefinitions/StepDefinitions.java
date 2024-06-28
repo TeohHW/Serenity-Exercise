@@ -8,8 +8,10 @@ import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actions.SelectFromOptions;
 import project.Common;
 import project.modules.deposit.DepositPageActions;
+import project.modules.dashboard.DashboardPageActions;
 import project.modules.login.LoginPageActions;
 import project.modules.register.RegisterPageActions;
+import project.modules.withdrawal.WithdrawalPageActions;
 
 public class StepDefinitions {
 
@@ -52,79 +54,122 @@ public class StepDefinitions {
     }
 
     //Registering a new account
-    @Given("User is on the registration page")
+    @Given("{actor} is on the registration page")
     public void userIsOnTheRegistrationPage(Actor actor) {
         actor.attemptsTo(
-                RegisterPageActions.navigateToRegistrationPage()
+                LoginPageActions.navigateToLoginPage(),
+                LoginPageActions.clickSignUp()
         );
     }
 
     @When("{actor} input firstName {string}")
-    public void userInputFirstNameFirstName() {
-
+    public void userInputFirstNameFirstName(Actor actor, String firstName) {
+        actor.attemptsTo(
+                RegisterPageActions.enterFirstName(firstName)
+        );
     }
 
     @And("{actor} input  lastName {string}")
-    public void userInputLastNameLastName() {
-
+    public void userInputLastNameLastName(Actor actor,String lastname) {
+        actor.attemptsTo(
+                RegisterPageActions.enterLastName(lastname)
+        );
     }
 
     @And("{actor} input  phone {string}")
-    public void userInputPhonePhone() {
-
+    public void userInputPhonePhone(Actor actor, String phoneNumber) {
+        actor.attemptsTo(
+                RegisterPageActions.enterPhoneNumber(phoneNumber)
+        );
     }
 
     @And("{actor} input  emailAddress {string}")
-    public void userInputEmailAddressEmailAddress() {
-
+    public void userInputEmailAddressEmailAddress(Actor actor,String email) {
+        actor.attemptsTo(
+                RegisterPageActions.enterEmailAddress(email)
+        );
     }
 
     @And("{actor} input  username {string}")
-    public void userInputUsernameUsername() {
-
+    public void userInputUsernameUsername(Actor actor, String username) {
+        actor.attemptsTo(
+                RegisterPageActions.enterUserName(username)
+        );
     }
 
     @And("{actor} input  password {string}")
-    public void userInputPasswordPassword() {
+    public void userInputPasswordPassword(Actor actor,String password) {
+        actor.attemptsTo(
+                RegisterPageActions.enterPassword(password)
+        );
     }
-    @When("{actor} clicks on sign up button")
-    public void userClicksOnSignUpButton(Actor actor) {
+    @Then("{actor} should be registered successfully")
+    public void userShouldBeRegisteredSuccessfully(Actor actor) {
         actor.attemptsTo(
                 RegisterPageActions.registerAccount()
         );
-    }
-
-    @Then("{actor} should be registered successfully")
-    public void userShouldBeRegisteredSuccessfully(Actor actor) {
         Common.timeout(3000);
     }
-    @Then("{actor} should be redirected to registration page")
-    public void userShouldBeRedirectedToRegistrationPage(Actor actor) {
-        actor.attemptsTo(
-                LoginPageActions.navigateToLoginPage()
-        );
-    }
+
     //Deposit
-    @Given("{actor} is on the deposit page")
-    public void userIsOnTheDepositPage(Actor actor) {
-            DepositPageActions.navigateToDepositPage();
-    }
-    @When("{actor} input account {string} and amount {string}")
-    public void userInputAccountAccountTypeAndAmountAmount(Actor actor, String account, String amount) {
+    @Given("{actor} is logged in with username {string} and password {string} and is on the Deposit page")
+    public void userIsOnTheDepositPage(Actor actor, String username, String password) {
         actor.attemptsTo(
-                DepositPageActions.selectAccount(account),
-                DepositPageActions.enterAmount(amount)
+                LoginPageActions.navigateToLoginPage(),
+                LoginPageActions.enterUserName(username),
+                LoginPageActions.enterUserPassword(password),
+                LoginPageActions.clickSignIn(),
+                DashboardPageActions.clickDeposit()
         );
+
     }
     @And("{actor} submit the deposit")
     public void userSubmitTheDeposit(Actor actor) {
         actor.attemptsTo(
-                DepositPageActions.navigateToDepositPage()
+                DepositPageActions.clickDeposit()
         );
     }
     @Then("{actor} should deposit successfully")
     public void userShouldDepositSuccessfully(Actor actor) {
         Common.timeout(3000);
     }
+
+    @When("{actor} input account {string}")
+    public void userInputAccountAccountType(Actor actor, String account) {
+        actor.attemptsTo(
+                DepositPageActions.selectAccount(account)
+        );
+    }
+
+    @And("{actor} input the amount {string}")
+    public void userInputTheAmountAmount(Actor actor, String amount) {
+        actor.attemptsTo(
+                DepositPageActions.enterAmount(amount)
+        );
+    }
+
+    @And("{actor} submit the withdrawal")
+    public void userSubmitTheWithdrawal(Actor actor) {
+        actor.attemptsTo(
+                WithdrawalPageActions.clickWithdraw()
+        );
+    }
+
+    @Then("{actor} should withdraw successfully")
+    public void userShouldWithdrawSuccessfully(Actor actor) {
+        Common.timeout(3000);
+    }
+
+    @Given("{actor} is logged in with username {string} and password {string} and is on the Withdraw page")
+    public void userIsOnTheWithdrawPage(Actor actor, String username, String password) {
+        actor.attemptsTo(
+                LoginPageActions.navigateToLoginPage(),
+                LoginPageActions.enterUserName(username),
+                LoginPageActions.enterUserPassword(password),
+                LoginPageActions.clickSignIn(),
+                DashboardPageActions.clickWithdraw()
+        );
+    }
     //Withdraw
 }
+

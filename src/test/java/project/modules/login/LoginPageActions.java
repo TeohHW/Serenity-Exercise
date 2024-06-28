@@ -31,4 +31,9 @@ public class LoginPageActions {
                 Click.on(LoginPageObjects.SIGNIN_BUTTON)
         );
     }
+    public static Performable clickSignUp() {
+        return Task.where("{0} clicks Sign Up button",
+                Click.on(LoginPageObjects.SIGNUP_BUTTON)
+        );
+    }
 }

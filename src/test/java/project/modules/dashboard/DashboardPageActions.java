@@ -9,10 +9,19 @@ import net.serenitybdd.screenplay.actions.Open;
 import net.serenitybdd.screenplay.actions.SelectFromOptions;
 
 public class DashboardPageActions {
-    public static Performable navigateToDashboard() {
-        String environment = "environments." + Serenity.environmentVariables().getProperty("environment", "default");
-        return Task.where("{0} navigates to dashboard",
-                Open.url(Serenity.environmentVariables().getProperty(environment + ".webdriver.base.url"))
+    public static Performable clickDeposit() {
+        return Task.where("{0} click deposit button",
+                Click.on(DashboardPageObjects.DEPOSIT_BUTTON)
+        );
+    }
+    public static void setPrimaryBalance() {
+        Serenity.setSessionVariable("balance").to(DashboardPageObjects.CURRENT_PRIMARY_BALANCE);
+        String balanceBefore = Serenity.sessionVariableCalled("balance");
+        System.out.println("Balance before deposit: " +balanceBefore);
+    }
+    public static Performable clickWithdraw() {
+        return Task.where("{0} clicks withdraw button",
+                Click.on(DashboardPageObjects.WITHDRAW_BUTTON)
         );
     }
 }

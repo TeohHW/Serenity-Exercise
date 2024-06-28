@@ -3,9 +3,8 @@ package project.modules.withdrawal;
 import net.serenitybdd.screenplay.targets.Target;
 
 class WithdrawalPageObjects {
-    public static Target USERNAME_FIELD = Target.the("User Name").locatedBy("//input[@id='username']");
-    public static Target PASSWORD_FIELD = Target.the("User Password").locatedBy("//input[@id='password']");
-    public static Target SIGNIN_BUTTON = Target.the("Sign In").locatedBy("//button[normalize-space()='Sign in']");
-    public static Target SIGNUP_BUTTON = Target.the("Sign Up").locatedBy("//a[@type='submit' and contains(@class, 'login-button') and @href='/signup']");
+    public static Target ACCOUNT_TYPE = Target.the("Account").locatedBy("//*[@id=\"accountType\"]");
+    public static Target AMOUNT = Target.the("Amount").locatedBy("//*[@id=\"amount\"]");
+    public static Target WITHDRAW_BTN = Target.the("Withdraw").locatedBy("/html/body/div[2]/div/div/form/button");
 
 }
