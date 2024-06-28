@@ -5,6 +5,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import net.serenitybdd.screenplay.Actor;
+import net.serenitybdd.screenplay.Performable;
+import net.serenitybdd.screenplay.Task;
 import net.serenitybdd.screenplay.actions.SelectFromOptions;
 import project.Common;
 import project.modules.deposit.DepositPageActions;
@@ -14,7 +16,6 @@ import project.modules.register.RegisterPageActions;
 import project.modules.withdrawal.WithdrawalPageActions;
 
 public class StepDefinitions {
-
     //Login
     @Given("{actor} is logged in with username {string} and password {string}")
     public void userIsLoggedIn(Actor actor, String username, String password) {
@@ -50,7 +51,6 @@ public class StepDefinitions {
 
     @Then("{actor} should be authenticated successfully")
     public void userShouldBeAuthenticatedSuccessfully(Actor actor) {
-        Common.timeout(3000);
     }
 
     //Registering a new account
@@ -118,10 +118,27 @@ public class StepDefinitions {
                 LoginPageActions.navigateToLoginPage(),
                 LoginPageActions.enterUserName(username),
                 LoginPageActions.enterUserPassword(password),
-                LoginPageActions.clickSignIn(),
+                LoginPageActions.clickSignIn()
+        );
+        actor.remember("initialBalance", DashboardPageActions.getPrimaryBalance());
+        Object recalledValue = actor.recall("initialBalance");
+        System.out.println("Balance before deposit: " + " "+recalledValue.toString());
+        actor.attemptsTo(
                 DashboardPageActions.clickDeposit()
         );
-
+    }
+    @When("{actor} input account for deposit {string}")
+    public void userInputAccountForDepositAccountType(Actor actor, String account) {
+        actor.attemptsTo(
+                DepositPageActions.selectAccount(account)
+        );
+    }
+    @And("{actor} input the amount for deposit {string}")
+    public void userInputTheAmountForDepositAmount(Actor actor,String amount) {
+        actor.attemptsTo(
+                DepositPageActions.enterAmount(amount)
+        );
+        actor.remember("amountDeposited", amount);
     }
     @And("{actor} submit the deposit")
     public void userSubmitTheDeposit(Actor actor) {
@@ -132,20 +149,41 @@ public class StepDefinitions {
     @Then("{actor} should deposit successfully")
     public void userShouldDepositSuccessfully(Actor actor) {
         Common.timeout(3000);
+        System.out.println("Amount deposited: " + actor.recall("amountDeposited"));
+        actor.remember("postBalance", DashboardPageActions.getPrimaryBalance());
+        Object recallValue = actor.recall("postBalance");
+        System.out.println("Balance AFTER deposit: " + " "+recallValue.toString());
     }
 
-    @When("{actor} input account {string}")
-    public void userInputAccountAccountType(Actor actor, String account) {
+    //Withdraw
+
+    @Given("{actor} is logged in with username {string} and password {string} and is on the Withdraw page")
+    public void userIsOnTheWithdrawPage(Actor actor, String username, String password) {
         actor.attemptsTo(
-                DepositPageActions.selectAccount(account)
+                LoginPageActions.navigateToLoginPage(),
+                LoginPageActions.enterUserName(username),
+                LoginPageActions.enterUserPassword(password),
+                LoginPageActions.clickSignIn()
+        );
+        actor.remember("initialBalance", DashboardPageActions.getPrimaryBalance());
+        Object recalledValue = actor.recall("initialBalance");
+        System.out.println("Balance before withdrawal: " + " "+recalledValue.toString());
+        actor.attemptsTo(
+                DashboardPageActions.clickWithdraw()
         );
     }
-
-    @And("{actor} input the amount {string}")
-    public void userInputTheAmountAmount(Actor actor, String amount) {
+    @When("{actor} input account for withdrawal {string}")
+    public void userInputAccountForWithdrawalAccountType(Actor actor,String account) {
         actor.attemptsTo(
-                DepositPageActions.enterAmount(amount)
+                WithdrawalPageActions.selectAccount(account)
         );
+    }
+    @And("{actor} input the amount for withdrawal {string}")
+    public void userInputTheAmountForWithdrawalAmount(Actor actor,String amount) {
+        actor.attemptsTo(
+                WithdrawalPageActions.enterAmount(amount)
+        );
+        actor.remember("amountWithdrawn",amount);
     }
 
     @And("{actor} submit the withdrawal")
@@ -158,18 +196,12 @@ public class StepDefinitions {
     @Then("{actor} should withdraw successfully")
     public void userShouldWithdrawSuccessfully(Actor actor) {
         Common.timeout(3000);
+        System.out.println("Amount withdrawn: " + actor.recall("amountWithdrawn"));
+        actor.remember("postBalance", DashboardPageActions.getPrimaryBalance());
+        Object recallValue = actor.recall("postBalance");
+        System.out.println("Balance AFTER withdrawal: " + " "+recallValue.toString());
     }
 
-    @Given("{actor} is logged in with username {string} and password {string} and is on the Withdraw page")
-    public void userIsOnTheWithdrawPage(Actor actor, String username, String password) {
-        actor.attemptsTo(
-                LoginPageActions.navigateToLoginPage(),
-                LoginPageActions.enterUserName(username),
-                LoginPageActions.enterUserPassword(password),
-                LoginPageActions.clickSignIn(),
-                DashboardPageActions.clickWithdraw()
-        );
-    }
-    //Withdraw
+
 }
 

@@ -5,8 +5,8 @@ Feature: Withdrawal Form Test
 
   @web @withdraw
   Scenario Outline: Successful User Withdrawal from Primary/Savings Account
-    When User input account '<Account Type>'
-    And User input the amount '<Amount>'
+    When User input account for withdrawal '<Account Type>'
+    And User input the amount for withdrawal '<Amount>'
     And User submit the withdrawal
     Then User should withdraw successfully
     Examples:
