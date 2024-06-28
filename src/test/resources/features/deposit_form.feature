@@ -13,6 +13,7 @@ Feature: Deposit Form Test
     Examples:
       |User Name| Password | Account Type | Amount |
       | testing123 | Password123 | Primary   | 5000   |
+      | testing123 | Password123 | Savings   | 5000   |
 
     # run in terminal (Command Prompt)
     # mvn clean verify -Dcucumber.filter.tags=@register

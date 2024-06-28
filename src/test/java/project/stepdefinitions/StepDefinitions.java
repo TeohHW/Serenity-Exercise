@@ -1,13 +1,11 @@
 package project.stepdefinitions;
 
+import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.Performable;
-import net.serenitybdd.screenplay.Task;
-import net.serenitybdd.screenplay.actions.SelectFromOptions;
 import project.Common;
 import project.modules.deposit.DepositPageActions;
 import project.modules.dashboard.DashboardPageActions;
@@ -68,35 +66,30 @@ public class StepDefinitions {
                 RegisterPageActions.enterFirstName(firstName)
         );
     }
-
     @And("{actor} input  lastName {string}")
     public void userInputLastNameLastName(Actor actor,String lastname) {
         actor.attemptsTo(
                 RegisterPageActions.enterLastName(lastname)
         );
     }
-
     @And("{actor} input  phone {string}")
     public void userInputPhonePhone(Actor actor, String phoneNumber) {
         actor.attemptsTo(
                 RegisterPageActions.enterPhoneNumber(phoneNumber)
         );
     }
-
     @And("{actor} input  emailAddress {string}")
     public void userInputEmailAddressEmailAddress(Actor actor,String email) {
         actor.attemptsTo(
                 RegisterPageActions.enterEmailAddress(email)
         );
     }
-
     @And("{actor} input  username {string}")
     public void userInputUsernameUsername(Actor actor, String username) {
         actor.attemptsTo(
                 RegisterPageActions.enterUserName(username)
         );
     }
-
     @And("{actor} input  password {string}")
     public void userInputPasswordPassword(Actor actor,String password) {
         actor.attemptsTo(
@@ -118,12 +111,10 @@ public class StepDefinitions {
     @Given("{actor} is depositing using username {string} and password {string}")
     public void userIsOnTheDepositPage(Actor actor, String username, String password) {
         userIsLoggedIn(actor, username, password);
+
         actor.remember("initialPrimaryBalance", DashboardPageActions.getPrimaryBalance());
-        Object initialPrimaryBalance = actor.recall("initialPrimaryBalance");
-        System.out.println("Primary balance before deposit: " + " "+initialPrimaryBalance.toString());
         actor.remember("initialSavingsBalance", DashboardPageActions.getSavingsBalance());
-        Object initialSavingsBalance = actor.recall("initialSavingsBalance");
-        System.out.println("Savings balance before deposit: " + " "+initialSavingsBalance.toString());
+
         actor.attemptsTo(
                 DashboardPageActions.clickDeposit()
         );
@@ -150,14 +141,32 @@ public class StepDefinitions {
     @Then("{actor} should deposit successfully")
     public void userShouldDepositSuccessfully(Actor actor) {
         Common.timeout(3000);
-        System.out.println("Amount deposited: " + actor.recall("amountDeposited"));
-        actor.remember("postPrimaryBalance", DashboardPageActions.getPrimaryBalance());
-        Object postPrimaryBalance = actor.recall("postPrimaryBalance");
-        System.out.println("Balance AFTER deposit: " + " "+postPrimaryBalance.toString());
 
+        actor.remember("postPrimaryBalance", DashboardPageActions.getPrimaryBalance());
         actor.remember("postSavingsBalance", DashboardPageActions.getSavingsBalance());
+
+        Object initialPrimaryBalance = actor.recall("initialPrimaryBalance");
+        Object initialSavingsBalance = actor.recall("initialSavingsBalance");
+        Object postPrimaryBalance = actor.recall("postPrimaryBalance");
         Object postSavingsBalance = actor.recall("postSavingsBalance");
-        System.out.println("Savings balance AFTER deposit: " + " "+postSavingsBalance.toString());
+
+        double actualPrimaryValueBefore = Double.parseDouble((String) initialPrimaryBalance);
+        double actualPrimaryValueAfter = Double.parseDouble((String) postPrimaryBalance);
+        double actualSavingsValueBefore = Double.parseDouble((String) initialSavingsBalance);
+        double actualSavingsValueAfter = Double.parseDouble((String) postPrimaryBalance);
+
+        if (actualPrimaryValueBefore != actualPrimaryValueAfter) {
+            System.out.println("Primary balance BEFORE deposit: " + " "+initialPrimaryBalance.toString());
+            System.out.println("Amount deposited: " + actor.recall("amountDeposited"));
+            System.out.println("Primary balance AFTER deposit: " + " "+postPrimaryBalance.toString());
+            System.out.println();
+        }
+        else if (actualSavingsValueBefore != actualSavingsValueAfter) {
+            System.out.println("Savings balance BEFORE deposit: " + " "+initialSavingsBalance.toString());
+            System.out.println("Amount deposited: " + actor.recall("amountDeposited"));
+            System.out.println("Savings balance AFTER deposit: " + " "+postSavingsBalance.toString());
+            System.out.println();
+        }
     }
 
     //Withdraw
@@ -166,15 +175,11 @@ public class StepDefinitions {
     }
     @Given("{actor} is withdrawing using username {string} and password {string}")
     public void userIsOnTheWithdrawPage(Actor actor, String username, String password) {
-        actor.attemptsTo(
-                LoginPageActions.navigateToLoginPage(),
-                LoginPageActions.enterUserName(username),
-                LoginPageActions.enterUserPassword(password),
-                LoginPageActions.clickSignIn()
-        );
-        actor.remember("initialBalance", DashboardPageActions.getPrimaryBalance());
-        Object recalledValue = actor.recall("initialBalance");
-        System.out.println("Balance before withdrawal: " + " "+recalledValue.toString());
+        userIsLoggedIn(actor,username,password);
+
+        actor.remember("initialPrimaryBalance", DashboardPageActions.getPrimaryBalance());
+        actor.remember("initialSavingsBalance", DashboardPageActions.getSavingsBalance());
+
         actor.attemptsTo(
                 DashboardPageActions.clickWithdraw()
         );
@@ -199,18 +204,37 @@ public class StepDefinitions {
                 WithdrawalPageActions.clickWithdraw()
         );
     }
-
     @Then("{actor} should withdraw successfully")
     public void userShouldWithdrawSuccessfully(Actor actor) {
         Common.timeout(3000);
-        System.out.println("Amount withdrawn: " + actor.recall("amountWithdrawn"));
-        actor.remember("postBalance", DashboardPageActions.getPrimaryBalance());
-        Object recallValue = actor.recall("postBalance");
-        System.out.println("Balance AFTER withdrawal: " + " "+recallValue.toString());
 
+        actor.remember("postPrimaryBalance", DashboardPageActions.getPrimaryBalance());
         actor.remember("postSavingsBalance", DashboardPageActions.getSavingsBalance());
-        Object postSavingsBalance = actor.recall("postSavingsBalance");
-        System.out.println("Savings balance AFTER withdrawal: " + " "+postSavingsBalance.toString());
-    }
 
+        Object initialPrimaryBalance = actor.recall("initialPrimaryBalance");
+        Object initialSavingsBalance = actor.recall("initialSavingsBalance");
+        Object postPrimaryBalance = actor.recall("postPrimaryBalance");
+        Object postSavingsBalance = actor.recall("postSavingsBalance");
+
+        double actualPrimaryValueBefore = Double.parseDouble((String) initialPrimaryBalance);
+        double actualPrimaryValueAfter = Double.parseDouble((String) postPrimaryBalance);
+        double actualSavingsValueBefore = Double.parseDouble((String) initialSavingsBalance);
+        double actualSavingsValueAfter = Double.parseDouble((String) postPrimaryBalance);
+
+        if (actualPrimaryValueBefore != actualPrimaryValueAfter) {
+            System.out.println("Primary balance BEFORE withdrawal: " + " "+initialPrimaryBalance.toString());
+            System.out.println("Amount withdrawn: " + actor.recall("amountWithdrawn"));
+            System.out.println("Primary balance AFTER withdraw: " + " "+postPrimaryBalance.toString());
+            System.out.println();
+        }
+        else if (actualSavingsValueBefore != actualSavingsValueAfter) {
+            System.out.println("Savings balance BEFORE withdrawal: " + " "+initialSavingsBalance.toString());
+            System.out.println("Amount withdrawn: " + actor.recall("amountWithdrawn"));
+            System.out.println("Savings balance AFTER withdrawal: " + " "+postSavingsBalance.toString());
+            System.out.println();
+        }
+    }
+    @After
+    public void closeDriver() {
+    }
 }

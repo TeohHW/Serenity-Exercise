@@ -1,13 +1,8 @@
 package project.modules.register;
-
-import net.serenitybdd.core.Serenity;
 import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.Task;
 import net.serenitybdd.screenplay.actions.Click;
 import net.serenitybdd.screenplay.actions.Enter;
-import net.serenitybdd.screenplay.actions.Open;
-import net.serenitybdd.screenplay.actors.OnStage;
-import org.openqa.selenium.WebElement;
 
 public class RegisterPageActions {
     public static Performable enterFirstName(String firstName) {
@@ -41,7 +36,6 @@ public class RegisterPageActions {
                 Enter.theValue(password).into(RegisterPageObjects.PASSWORD_FIELD)
         );
     }
-
     public static Performable registerAccount() {
         return Task.where("{0} clicks Sign Up button",
                 Click.on(RegisterPageObjects.SIGNUP_BUTTON)
